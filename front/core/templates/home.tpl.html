@@ -1,0 +1,20 @@
+<div class="container">
+  <div class="row">
+    <div ng-repeat="post in posts | orderBy: '-totalvotes'">
+      <div class="post">
+        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+          <div class="vote-sect">
+            <p><a ng-click="upvote(post.token)" class="up-btn"><i class="fa fa-chevron-up"></i></a></p>
+            <p><a ng-click="downvote(post.token)" class="down-btn"><i class="fa fa-chevron-down"></i></a></p>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
+          <h3><a class="post-link" href="{{post.link}}">{{post.title}}</a></h3>
+          <p class="point-txt">{{post.upvotes - post.downvotes}} votes</p>
+          <p>Submitted By {{post.author}}. <a href="#/post/{{post.token}}"class="post-link">Commment Here</a></p>
+        </div>
+      </div>
+      <hr>
+    </div>
+  </div>
+</div>
