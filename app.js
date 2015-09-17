@@ -137,6 +137,7 @@ app.get("/posts", function(req,res) {
       var formattedData = [];
       for(var i = 0; i < data.length; i++) {
         var newData = {
+          _id: data[i]._id,
           title: data[i].title,
           link: data[i].link,
           description: data[i].description,
@@ -154,13 +155,14 @@ app.get("/posts", function(req,res) {
   });
 });
 
-app.get("/posts/:token", function(req,res) {
-  Post.findOne({token: req.params.token}, function(err,data) {
+app.get("/posts/:_id", function(req,res) {
+  Post.findOne({_id: req.params._id}, function(err,data) {
     if(err) {
       res.status(500).send(err);
     }
      if(data) {
        var formattedData = {
+         _id: data._id,
          title: data.title,
          link: data.link,
          description: data.description,
@@ -176,7 +178,7 @@ app.get("/posts/:token", function(req,res) {
   });
 });
 
-app.post("/postcomment/:token", function(req,res) {
+app.post("/postcomment/:_id", function(req,res) {
   var pass = true;
   if(!req.body.usertoken) {
     pass = false;
@@ -192,7 +194,7 @@ app.post("/postcomment/:token", function(req,res) {
         res.status(500).send(err);
       }
       if(user) {
-        Post.findOne({token: req.params.token}, function(err,data) {
+        Post.findOne({_id: _id}, function(err,data) {
           if(err) {
             res.status(500).send(err);
           }
