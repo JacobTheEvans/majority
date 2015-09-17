@@ -22,6 +22,18 @@ var commentSchema = new Schema({
   author: {
     type: String,
     required: true
+  },
+  upvotes: {
+    type: [String],
+    required: true
+  },
+  downvotes: {
+    type: [String],
+    required: true
+  },
+  token: {
+    type: String,
+    required: true
   }
 });
 

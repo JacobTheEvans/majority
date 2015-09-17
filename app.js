@@ -62,14 +62,13 @@ app.post("/post", function(req,res) {
         link: req.body.link,
         description: req.body.description,
         author: username,
-        upvotes: 0,
-        downvotes: 0,
+        upvotes: [],
+        downvotes: [],
         token: newToken,
       };
       var newPost = new Post(newData);
       newPost.save(function(err,data) {
         if(err) {
-          console.log(err);
           res.status(500).send(err);
         }
         if(data){
@@ -108,14 +107,13 @@ app.put("/vote/:_type", function(req,res) {
           }
           if(data) {
             if(req.params._type == "up" && data.upvotes.indexOf(user.username) == -1) {
-              console.log(user);
               data.upvotes.push(user.username);
               data.save();
-              res.status(200).send(data.upvotes.length);
+              res.status(200).send(data);
             } else if(req.params._type == "down" && data.downvotes.indexOf(user.username) == -1) {
               data.downvotes.push(user.username);
               data.save();
-              res.status(200).send(data.downvotes.length);
+              res.status(200).send(data);
             } else {
               res.status(200).send("User has already voted");
             }
@@ -163,19 +161,69 @@ app.get("/posts/:token", function(req,res) {
     }
      if(data) {
        var formattedData = {
-         title: data[i].title,
-         link: data[i].link,
-         description: data[i].description,
-         author: data[i].author,
-         upvotes: data[i].upvotes.length,
-         downvotes: data[i].downvotes.length,
-         totalvotes: data[i].upvotes.length - data[i].downvotes.length,
-         comments: data[i].comments,
-         token: data[i].token
+         title: data.title,
+         link: data.link,
+         description: data.description,
+         author: data.author,
+         upvotes: data.upvotes.length,
+         downvotes: data.downvotes.length,
+         totalvotes: data.upvotes.length - data.downvotes.length,
+         comments: data.comments,
+         token: data.token
        };
       res.status(200).send(formattedData);
     }
   });
+});
+
+app.post("/postcomment/:token", function(req,res) {
+  var pass = true;
+  if(!req.body.usertoken) {
+    pass = false;
+    res.status(400).send("Usertoken must be in JSON");
+  }
+  if(!req.body.text) {
+    pass = false;
+    res.status(400).send("Text must be in JSON");
+  }
+  if(pass) {
+    User.findOne({token: req.body.usertoken}, function(err,user) {
+      if(err) {
+        res.status(500).send(err);
+      }
+      if(user) {
+        Post.findOne({token: req.params.token}, function(err,data) {
+          if(err) {
+            res.status(500).send(err);
+          }
+          if(data) {
+            var username = user.username;
+            var newToken = "Token: " + uuid.v1();
+            var newData = {
+              text: req.body.text,
+              author: username,
+              upvotes: [],
+              downvotes: [],
+              token: newToken
+            };
+            var newComment = new Commment(newData);
+            newComment.save(function(err, comment) {
+              if(err) {
+                res.status(400).send(err);
+              }
+              data.comments.push(comment);
+              data.save();
+              res.status(200).send(newToken);
+            });
+          } else {
+            res.status(400).send("PostToken not found or is expired");
+          }
+        });
+      } else {
+        res.status(400).send("Usertoken not found or expired");
+      }
+    });
+  }
 });
 
 app.listen(8080);

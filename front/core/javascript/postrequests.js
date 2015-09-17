@@ -9,6 +9,17 @@ app.service("getPosts",["$http", function($http) {
   };
 }]);
 
+app.service("postComment",["$http", function($http) {
+  this.postComment = function(usertoken,posttoken,text,onSuc,onFail) {
+    var data = {
+      usertoken: usertoken,
+      text: text
+    };
+    console.log(data);
+    $http.post("http://localhost:8080/postcomment/" + posttoken ,data).then(onSuc,onFail);
+  };
+}]);
+
 app.service("vote", ["$http", function($http) {
   this.voteUp = function(usertoken,posttoken,onSuc,onFail) {
     var data = {
