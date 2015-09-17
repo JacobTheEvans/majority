@@ -15,7 +15,7 @@ app.controller("commentController", ["$scope", "$routeParams", "getPosts", "post
     console.log(response.data);
   };
   $scope.logError = function(response) {
-    console.log(response.body);
+    console.log(response.data);
   };
   $scope.postComment = function() {
     if($cookies.get("UserToken")) {

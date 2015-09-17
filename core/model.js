@@ -66,14 +66,11 @@ var postSchema = new Schema({
     type: String,
     required: true
   },
-  comments: {
-    type: [commentSchema],
-    required: false
-  }
+  comments: [{ type: Schema.Types.ObjectId, ref: 'comment'}]
 });
 
 module.exports = {
   User: mongoose.model("user", userSchema),
   Post: mongoose.model("post", postSchema),
-  Commment: mongoose.model("commment", commentSchema)
+  Comment: mongoose.model("comment", commentSchema)
 };

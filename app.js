@@ -4,7 +4,7 @@ var mongoose = require("mongoose");
 var uuid = require("uuid");
 var User = require("./core/model.js").User;
 var Post = require("./core/model.js").Post;
-var Commment = require("./core/model.js").Commment;
+var Comment = require("./core/model.js").Comment;
 
 mongoose.connect("mongodb://localhost/majority");
 
@@ -62,8 +62,8 @@ app.post("/post", function(req,res) {
         link: req.body.link,
         description: req.body.description,
         author: username,
-        upvotes: [],
-        downvotes: [],
+        upvotes: 0,
+        downvotes: 0,
         token: newToken,
       };
       var newPost = new Post(newData);
@@ -156,7 +156,7 @@ app.get("/posts", function(req,res) {
 });
 
 app.get("/posts/:_id", function(req,res) {
-  Post.findOne({_id: req.params._id}, function(err,data) {
+  Post.findOne({_id: req.params._id}).populate("comments").exec(function(err,data) {
     if(err) {
       res.status(500).send(err);
     }
@@ -194,7 +194,7 @@ app.post("/postcomment/:_id", function(req,res) {
         res.status(500).send(err);
       }
       if(user) {
-        Post.findOne({_id: _id}, function(err,data) {
+        Post.findOne({_id: req.params._id}, function(err,data) {
           if(err) {
             res.status(500).send(err);
           }
@@ -204,21 +204,21 @@ app.post("/postcomment/:_id", function(req,res) {
             var newData = {
               text: req.body.text,
               author: username,
-              upvotes: [],
-              downvotes: [],
+              upvotes: 0,
+              downvotes: 0,
               token: newToken
             };
-            var newComment = new Commment(newData);
+            var newComment = new Comment(newData);
             newComment.save(function(err, comment) {
               if(err) {
-                res.status(400).send(err);
+                res.status(500).send(err);
               }
               data.comments.push(comment);
               data.save();
               res.status(200).send(newToken);
             });
           } else {
-            res.status(400).send("PostToken not found or is expired");
+            res.status(500).send("PostToken not found or is expired");
           }
         });
       } else {

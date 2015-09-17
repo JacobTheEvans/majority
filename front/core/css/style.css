@@ -44,6 +44,10 @@ body {
   margin-top: 35px;
 }
 
+.vote-sect-comment {
+  margin-top: -5px;
+}
+
 .up-btn {
   font-size: 14px;
 }
