@@ -15,7 +15,6 @@ app.service("postComment",["$http", function($http) {
       usertoken: usertoken,
       text: text
     };
-    console.log(data);
     $http.post("http://localhost:8080/postcomment/" + _id ,data).then(onSuc,onFail);
   };
 }]);
