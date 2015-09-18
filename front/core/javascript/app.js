@@ -24,7 +24,6 @@ app.controller("loginController",["$scope", "login", "logout", "$cookies", funct
       var minutes = 20;
       var date = new Date();
       var expires = new Date(date.getTime() + minutes*60000);
-      console.log(response.data);
       $cookies.put("UserToken",response.data,{expires:expires});
       $scope.isLoggedIn = true;
     }
@@ -37,8 +36,9 @@ app.controller("loginController",["$scope", "login", "logout", "$cookies", funct
     $scope.loginData = {};
   };
   $scope.logout = function() {
-    $cookies.remove("UserToken");
+    login.requestLogout($cookies.get("UserToken"),$scope.requestFail,$scope.requestFail);
     $scope.isLoggedIn = false;
+    $cookies.remove("UserToken");
   };
 }]);
 

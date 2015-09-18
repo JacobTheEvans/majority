@@ -37,6 +37,21 @@ app.post("/login",function(req,res) {
   });
 });
 
+app.post("/logout",function(req,res) {
+  if(!req.body.usertoken) {
+    res.send("usertoken required in JSON");
+  }
+  User.findOne({token: req.body.usertoken}, function(err, data) {
+    if(err) {
+      res.status(400).send(err);
+    }
+    if(data) {
+      data.remove();
+      data.save();
+    }
+  });
+});
+
 app.post("/post", function(req,res) {
   if(!req.body.usertoken) {
     res.status(400).send("UserToken required in JSON");
