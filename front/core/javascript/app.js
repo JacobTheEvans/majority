@@ -21,7 +21,11 @@ app.controller("loginController",["$scope", "login", "logout", "$cookies", funct
     if(response.data == "Username Taken") {
       alert("Username Taken");
     } else {
-      $cookies.put("UserToken",response.data);
+      var minutes = 20;
+      var date = new Date();
+      var expires = new Date(date.getTime() + minutes*60000);
+      console.log(response.data);
+      $cookies.put("UserToken",response.data,{expires:expires});
       $scope.isLoggedIn = true;
     }
   };
