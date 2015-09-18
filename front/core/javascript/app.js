@@ -38,13 +38,15 @@ app.controller("loginController",["$scope", "login", "logout", "$cookies", funct
   };
 }]);
 
-app.controller("submitController", ["$scope","postLink","$cookies", function($scope,postLink,$cookies) {
+app.controller("submitController", ["$scope","postLink","$cookies", "$window", function($scope,postLink,$cookies,$window) {
   $scope.newPost = {};
   $scope.sucPost = function(response) {
     $scope.newPost = {};
+    $window.location.href = "/#/post/" + response.data;
   };
   $scope.requestFail = function(response) {
-    console.log(response.data)
+    alert("Post Failed");
+    console.log(response.data);
   };
   $scope.postLink = function() {
     var data = {

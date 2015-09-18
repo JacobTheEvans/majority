@@ -28,11 +28,25 @@ app.service("vote", ["$http", function($http) {
     };
     $http.put("http://localhost:8080/vote/up",data).then(onSuc,onFail);
   };
-  this.voteDown = function(usertoken,postToken,onSuc,onFail) {
+  this.voteDown = function(usertoken,posttoken,onSuc,onFail) {
     var data = {
       usertoken: usertoken,
-      posttoken: postToken
+      posttoken: posttoken
     };
     $http.put("http://localhost:8080/vote/down",data).then(onSuc,onFail);
-  }
+  };
+  this.voteUpComment = function(usertoken,posttoken,onSuc,onFail) {
+    var data = {
+      usertoken: usertoken,
+      posttoken: posttoken
+    };
+    $http.put("http://localhost:8080/votecomment/up",data).then(onSuc,onFail);
+  };
+  this.voteDownComment = function(usertoken,posttoken,onSuc,onFail) {
+    var data = {
+      usertoken: usertoken,
+      posttoken: posttoken
+    };
+    $http.put("http://localhost:8080/votecomment/down",data).then(onSuc,onFail);
+  };
 }]);

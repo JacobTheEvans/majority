@@ -8,20 +8,40 @@ app.config(["$routeProvider", function($routeProvider) {
   });
 }]);
 
-app.controller("commentController", ["$scope", "$routeParams", "getPosts", "postComment", "$cookies", function($scope, $routeParams, getPosts, postComment, $cookies){
+app.controller("commentController", ["$scope", "$routeParams", "getPosts", "postComment", "$cookies", "vote", function($scope, $routeParams, getPosts, postComment, $cookies, vote){
   $scope._id = $routeParams._id;
   $scope.setData = function(response) {
-    $scope.post = response.data;
-    console.log(response.data);
+    var formattedData = response.data;
+    for(var i = 0; i < formattedData.comments.length; i++) {
+      formattedData.comments[i].totalvotes = formattedData.comments[i].upvotes.length - formattedData.comments[i].downvotes.length;
+    }
+    $scope.post = formattedData;
   };
   $scope.logError = function(response) {
     console.log(response.data);
   };
+  $scope.refresh = function() {
+    getPosts.getSpecficPost($scope._id,$scope.setData,$scope.logError);
+  };
   $scope.postComment = function() {
     if($cookies.get("UserToken")) {
-      postComment.postComment($cookies.get("UserToken"),$scope._id,$scope.commentText);
+      postComment.postComment($cookies.get("UserToken"),$scope._id,$scope.commentText,$scope.refresh,$scope.logError);
     } else {
       alert("Must be logged in to comment");
+    }
+  };
+  $scope.upvote = function(posttoken) {
+    if($cookies.get("UserToken")) {
+      vote.voteUpComment($cookies.get("UserToken"),posttoken,$scope.refresh,$scope.logError);
+    } else {
+      alert("Must be logged in to vote");
+    }
+  };
+  $scope.downvote = function(posttoken) {
+    if($cookies.get("UserToken")) {
+      vote.voteDownComment($cookies.get("UserToken"),posttoken,$scope.refresh,$scope.logError);
+    } else {
+      alert("Must be logged in to vote");
     }
   };
   getPosts.getSpecficPost($scope._id,$scope.setData,$scope.logError);

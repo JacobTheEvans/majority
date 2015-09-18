@@ -15,16 +15,18 @@
       <hr>
       <h4>Comments</h4>
       <hr>
-      <div ng-repeat="comment in post.comments">
-        <div class="col-lg-1">
+      <div ng-repeat="comment in post.comments | orderBy: '-totalvotes'">
+        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
           <div class="vote-sect-comment">
-            <p><a ng-click="upvote(post.token)" class="up-btn"><i class="fa fa-chevron-up"></i></a></p>
-            <p><a ng-click="downvote(post.token)" class="down-btn"><i class="fa fa-chevron-down"></i></a></p>
+            <p><a ng-click="upvote(comment.token)" class="up-btn"><i class="fa fa-chevron-up"></i></a></p>
+            <p><a ng-click="downvote(comment.token)" class="down-btn"><i class="fa fa-chevron-down"></i></a></p>
           </div>
         </div>
-        <div class="col-lg-11">
-          <label>{{comment.author}} {{comment.upvotes - comments.downvotes}} points</label>
+        <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
+          <label>{{comment.author}} {{comment.upvotes.length - comment.downvotes.length}} points</label>
+          <p>Votes {{comment.totalvotes}}</p>
           <p>{{comment.text}}</p>
+          <hr>
         </div>
         <hr>
       </div>

@@ -67,7 +67,7 @@
             <input type="text" name="description" required ng-model="newPost.description" class="form-control" type="url">
           </div>
           <div class="modal-footer">
-            <button ng-click="postLink()" ng-disabled="newPostForm.$invalid" type="button" class="btn btn-primary">Submit</button>
+            <button ng-click="postLink()" ng-disabled="newPostForm.$invalid" type="button" class="btn btn-primary" data-dismiss="modal">Submit</button>
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
           </div>
         </form>

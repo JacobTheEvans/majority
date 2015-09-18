@@ -10,7 +10,6 @@ app.config(["$routeProvider", function($routeProvider) {
 
 app.controller("postController", ["$scope", "getPosts", "vote", "$cookies", function($scope,getPosts,vote,$cookies) {
   $scope.setData = function(response) {
-    console.log(response.data);
     $scope.posts = response.data;
   }
   $scope.logError = function(response) {

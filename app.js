@@ -72,7 +72,7 @@ app.post("/post", function(req,res) {
           res.status(500).send(err);
         }
         if(data){
-          res.status(newToken);
+          res.status(200).send(data._id);
         }
       });
     } else {
@@ -113,6 +113,55 @@ app.put("/vote/:_type", function(req,res) {
             } else if(req.params._type == "down" && data.downvotes.indexOf(user.username) == -1) {
               data.downvotes.push(user.username);
               data.save();
+              res.status(200).send(data);
+            } else {
+              res.status(200).send("User has already voted");
+            }
+          } else {
+            res.status(400).send("PostToken not found or is expired");
+          }
+        });
+      } else {
+        res.status(400).send("Usertoken not found or expired");
+      }
+    });
+  }
+});
+
+
+app.put("/votecomment/:_type", function(req,res) {
+  var pass = true;
+  if(!req.body.usertoken) {
+    pass = false;
+    res.status(400).send("Usertoken must be in JSON");
+  }
+  if(!req.body.posttoken) {
+    pass = false;
+    res.status(400).send("PostToken must be in JSON");
+  }
+  if(req.params._type != "up" && req.params._type != "down") {
+    pass = false;
+    res.status(400).send("URL value must be 'up' or 'down'");
+  }
+  if(pass) {
+    User.findOne({token: req.body.usertoken}, function(err,user) {
+      if(err) {
+        res.status(500).send(err);
+      }
+      if(user) {
+        Comment.findOne({token: req.body.posttoken}, function(err,data) {
+          if(err) {
+            res.status(500).send(err);
+          }
+          if(data) {
+            if(req.params._type == "up" && data.upvotes.indexOf(user.username) == -1) {
+              data.upvotes.push(user.username);
+              data.save();
+              res.status(200).send(data);
+            } else if(req.params._type == "down" && data.downvotes.indexOf(user.username) == -1) {
+              data.downvotes.push(user.username);
+              data.save();
+              var formattedData
               res.status(200).send(data);
             } else {
               res.status(200).send("User has already voted");
